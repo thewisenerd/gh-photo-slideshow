@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+    <!-- Place somewhere in the <head> of your document -->
+    <link rel="stylesheet" href="woothemes-FlexSlider-9a419a0/flexslider.css" type="text/css">
+    <script src="woothemes-FlexSlider-9a419a0/jquery.flexslider.js"></script>
+
+    <style>
+      .flexslider .slides img {
+        width: 400px;
+        height: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="flexslider">
+      <ul class="slides">
+      </ul>
+    </div>
+
+  </body>
+
+  <script type="text/javascript">
+
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+      }
+    };
+
+    $(document).on('ready', function() {
+      var api = 'https://api.github.com';
+
+      var o = getUrlParameter('o');
+      var r = getUrlParameter('r');
+      var p = getUrlParameter('p');
+
+      var container = $('.slides');
+
+      if (o == undefined) {
+        return;
+      }
+      if (r == undefined) {
+        return;
+      }
+
+      if (p == undefined) {
+        return
+      }
+
+      $.get(api + '/repos/' + o + '/' + r + '/contents/' + p, function(data) {
+        $(data).each(function(idx) {
+          var obj = data[idx];
+
+          var name = obj.name;
+          var url  = obj.download_url;
+
+          var str = '<li><img src="' + url +  '" /></li>';
+
+          container.append(str);
+
+          //console.log(url);
+        });
+
+        $('.flexslider').flexslider();
+      });
+    });
+  </script>
+
+
+</html>
